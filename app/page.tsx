@@ -154,7 +154,7 @@ export default function Home() {
           <div className="w-full md:w-[68%] flex flex-col justify-center">
             <p className="text-[15px] font-normal tracking-[0.12em] text-zinc-400 sm:text-[1.2rem]">Hi, I’m</p>
             <h1
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight text-center md:text-left"
               aria-label="Prakhar Aditya Tripathi"
             >
               <span
