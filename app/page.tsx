@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 const fullName = 'Prakhar Aditya Tripathi';
@@ -24,13 +25,13 @@ export default function Home() {
       currentIndex += 1;
 
       if (currentIndex < fullName.length) {
-        timerId = window.setTimeout(typeTick, 100);
+        timerId = window.setTimeout(typeTick, 20);
       } else {
         setShowCursor(false);
       }
     };
 
-    timerId = window.setTimeout(typeTick, 180);
+    timerId = window.setTimeout(typeTick, 20);
 
     return () => window.clearTimeout(timerId);
   }, []);
@@ -57,7 +58,22 @@ export default function Home() {
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent,rgba(0,0,0,0.4)_100%)]"></div>
       </div>
 
+      <div className="translate-y-1 absolute top-0 left-0 z-50 px-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6 sm:pt-6">
+        <a href="#home" aria-label="Home">
+          <span
+            className="logo-animate text-4xl leading-none transition-opacity duration-300 hover:opacity-70"
+            style={{
+              fontFamily: "'Tiro Devanagari Hindi', serif",
+              color: 'rgba(255, 255, 255, 0.28)',
+              fontWeight: 500,
+            }}
+          >
+            प्र
+          </span>
+        </a>
+      </div>
       <header className="fixed top-0 left-0 right-0 z-50 flex justify-end px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-2 sm:px-6 sm:pt-6 sm:pb-0">
+
         <div className="relative flex items-start justify-end">
           <input
             type="checkbox"
@@ -70,7 +86,7 @@ export default function Home() {
           <label
             htmlFor="nav-toggle"
             id="nav-menu-label"
-            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] text-zinc-200 shadow-lg shadow-black/20 backdrop-blur-xl transition-colors hover:border-white/20 hover:bg-white/[0.1] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 md:hidden"
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg border border-white/10 bg-white/5 text-zinc-200 shadow-sm transition-all hover:border-white/15 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 md:hidden"
             aria-controls="site-nav"
             aria-label={navLabel}
             aria-expanded={navOpen ? 'true' : 'false'}
@@ -108,7 +124,7 @@ export default function Home() {
 
       <section
         id="home"
-        className="relative mx-auto max-w-3xl px-5 pt-28 pb-8 text-center sm:px-8 sm:pt-32 sm:pb-10 md:px-10 md:pt-36 md:pb-12"
+        className="relative mx-auto max-w-6xl px-5 pt-20 pb-6 sm:px-8 sm:pt-24 sm:pb-8 md:px-12 md:pt-28 md:pb-10"
       >
         <div
           className="pointer-events-none absolute left-1/2 top-[42%] h-[min(22rem,55vw)] w-[min(22rem,85vw)] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/[0.14] blur-[64px]"
@@ -119,74 +135,94 @@ export default function Home() {
           aria-hidden="true"
         ></div>
 
-        <div className="relative">
-          <p className="text-[1.05rem] font-normal tracking-[0.12em] text-zinc-400 sm:text-[1.2rem]">Hi, I’m</p>
-          <h1
-            className="mx-auto mt-3 min-h-[1.2em] text-4xl font-bold leading-[1.08] tracking-tight sm:text-5xl md:text-6xl lg:text-7xl"
-            aria-label="Hi, I'm Prakhar Aditya Tripathi"
-          >
-            <span
-              id="hero-typed-name"
-              style={{
-                background: 'linear-gradient(to bottom right, #ffffff, #dbeafe, #60a5fa)',
-                WebkitBackgroundClip: 'text',
-                backgroundClip: 'text',
-                color: 'transparent',
-              }}
+        <div className="relative flex flex-col items-center gap-7 md:flex-row-reverse md:items-center md:gap-3">
+          <div className="w-full max-w-[15rem] md:max-w-none md:w-[28%] md:self-center md:pr-4">
+            <div className="rounded-3xl overflow-hidden shadow-2xl shadow-blue-500/10 ring-1 ring-white/15 ring-offset-2 ring-offset-transparent backdrop-blur-sm"
+              style={{ background: 'linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(96,165,250,0.06) 100%)', boxShadow: '0 0 0 1px rgba(255,255,255,0.1), 0 0 32px rgba(96,165,250,0.15), 0 8px 32px rgba(0,0,0,0.4)' }}
             >
-              {heroText}
-            </span>
-            <span
-              id="hero-typed-cursor"
-              className={`ml-0.5 inline-block h-[0.82em] w-0.5 translate-y-1 bg-blue-400 align-middle transition-opacity duration-300 ${showCursor ? 'opacity-100 shadow-[0_0_12px_rgba(96,165,250,0.8)]' : 'opacity-0'
-                }`}
-              aria-hidden="true"
-            />
-          </h1>
-          <div className="mt-7 flex justify-center gap-2.5 sm:gap-3 w-full sm:w-auto">
-            <a
-              href="https://github.com/codyandersan"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex flex-1 sm:flex-1 items-center justify-center gap-2.5 rounded-full border border-white/15 bg-white/[0.07] px-4 py-2 text-sm font-medium text-blue-300 shadow-lg shadow-black/20 backdrop-blur-xl transition-all hover:border-blue-400/35 hover:bg-blue-500/15 hover:text-blue-200 sm:text-base"
-            >
-              <svg
-                className="h-4 w-4 shrink-0 text-zinc-400 transition-colors group-hover:text-blue-300"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7a3.37 3.37 0 00-.94 2.58V22" />
-              </svg>
-              <span>@codyandersan</span>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/prakhartri/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group flex flex-1 sm:flex-1 items-center justify-center gap-2.5 rounded-full border border-white/15 bg-white/[0.07] px-4 py-2 text-sm font-medium text-blue-300 shadow-lg shadow-black/20 backdrop-blur-xl transition-all hover:border-blue-400/35 hover:bg-blue-500/15 hover:text-blue-200 sm:text-base"
-            >
-              <svg
-                className="h-4 w-4 shrink-0 text-zinc-400 transition-colors group-hover:text-blue-300"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.852 3.37-1.852 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
-              </svg>
-              <span>prakhartri</span>
-            </a>
+              <Image
+                src="/profile.webp"
+                alt="Prakhar Aditya Tripathi"
+                width={700}
+                height={700}
+                className="w-full h-auto object-cover"
+                priority
+              />
+            </div>
           </div>
-          <p className="mx-auto mt-8 max-w-lg text-base font-normal leading-relaxed text-zinc-400 sm:text-lg">
-            I build tools that simplify things.
-          </p>
-          <p className="mt-3 text-xs font-medium tracking-wide text-zinc-600 sm:text-sm">
-            Student • Based in Lucknow, India
-          </p>
+
+          <div className="w-full md:w-[68%] flex flex-col justify-center">
+            <p className="text-[15px] font-normal tracking-[0.12em] text-zinc-400 sm:text-[1.2rem]">Hi, I’m</p>
+            <h1
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight tracking-tight"
+              aria-label="Prakhar Aditya Tripathi"
+            >
+              <span
+                id="hero-typed-name"
+                style={{
+                  background: 'linear-gradient(135deg, #ffffff 0%, #dbeafe 50%, #60a5fa 100%)',
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                }}
+              >
+                {heroText}
+              </span>
+              <span
+                id="hero-typed-cursor"
+                className={`ml-1 inline-block h-[0.9em] w-0.5 bg-blue-400 transition-opacity duration-300 ${showCursor ? 'opacity-100' : 'opacity-0'
+                  }`}
+                aria-hidden="true"
+              />
+            </h1>
+
+            <p className="mt-4 text-base sm:text-lg text-zinc-300 font-light leading-relaxed text-center md:text-left">
+              I build tools that simplify things.
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-3 md:gap-2.5 items-center justify-center md:justify-start">
+              <a
+                href="https://github.com/codyandersan"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-center gap-2.5 rounded-lg border border-white/15 bg-white/[0.07] px-4 py-2.5 text-sm font-medium text-blue-300 shadow-lg shadow-black/20 backdrop-blur-xl transition-all hover:border-blue-400/35 hover:bg-blue-500/15 hover:text-blue-200"
+              >
+                <svg
+                  className="h-4 w-4 shrink-0 text-zinc-400 transition-colors group-hover:text-blue-300"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.6"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7a3.37 3.37 0 00-.94 2.58V22" />
+                </svg>
+                <span>GitHub</span>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/prakhartri/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-center gap-2.5 rounded-lg border border-white/15 bg-white/[0.07] px-4 py-2.5 text-sm font-medium text-blue-300 shadow-lg shadow-black/20 backdrop-blur-xl transition-all hover:border-blue-400/35 hover:bg-blue-500/15 hover:text-blue-200"
+              >
+                <svg
+                  className="h-4 w-4 shrink-0 text-zinc-400 transition-colors group-hover:text-blue-300"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.852 3.37-1.852 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z" />
+                </svg>
+                <span>LinkedIn</span>
+              </a>
+            </div>
+
+            <p className="mt-4 text-xs font-medium tracking-wide text-zinc-500">
+              Student • Lucknow, India
+            </p>
+          </div>
         </div>
       </section>
 
@@ -262,10 +298,6 @@ export default function Home() {
           </header>
 
           <div className="relative mt-5 md:mt-6">
-            {/* <div
-              className="pointer-events-none absolute left-[6.875rem] top-[1rem] bottom-[1rem] w-0.5 bg-blue-600 sm:left-[9.375rem] sm:top-[1.25rem] sm:bottom-[1.25rem]"
-              aria-hidden="true"
-            ></div> */}
             <div
               className="pointer-events-none absolute top-[1rem] bottom-[1rem] w-0.5 bg-blue-600 left-[6.875rem] sm:left-[9.375rem] -translate-x-1/2 sm:top-[1.25rem] sm:bottom-[1.25rem]"
               aria-hidden="true"
@@ -405,7 +437,7 @@ export default function Home() {
           <p className="mt-5 max-w-xl text-sm leading-relaxed text-zinc-400 sm:mt-6 sm:text-base">
             Reach out for collaborations, questions, or just to say hello.
           </p>
-          <ul className="mt-5 grid grid-cols-2 gap-2.5 sm:mt-6 md:grid-cols-4 md:gap-3">
+          <ul className="mt-5 grid grid-cols-2 gap-2.5 sm:mt-6 md:grid-cols-4 md:gap-4">
             {[
               {
                 href: 'https://github.com/codyandersan',
@@ -421,7 +453,7 @@ export default function Home() {
                 ],
               },
               {
-                href: 'mailto:codyandersan@aol.com',
+                href: 'mailto:me@prakhartri.me',
                 label: 'Email',
                 iconClass: 'text-blue-400/90',
                 paths: [
