@@ -8,7 +8,6 @@ const fullName = 'Prakhar Aditya Tripathi';
 export default function Home() {
   const [heroText, setHeroText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
-  const [navOpen, setNavOpen] = useState(false);
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -36,20 +35,6 @@ export default function Home() {
     return () => window.clearTimeout(timerId);
   }, []);
 
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && navOpen) {
-        setNavOpen(false);
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [navOpen]);
-
-  const closeNav = () => setNavOpen(false);
-  const navLabel = navOpen ? 'Close menu' : 'Open menu';
-
   return (
     <main>
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden="true">
@@ -57,70 +42,6 @@ export default function Home() {
         <div className="absolute bottom-[-20%] left-[-15%] h-[24rem] w-[24rem] rounded-full bg-blue-500/[0.08] blur-[90px]"></div>
         <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent,rgba(0,0,0,0.4)_100%)]"></div>
       </div>
-
-      <div className="translate-y-1 absolute top-0 left-0 z-50 px-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6 sm:pt-6">
-        <a href="#home" aria-label="Home">
-          <span
-            className="logo-animate text-4xl leading-none transition-opacity duration-300 hover:opacity-70"
-            style={{
-              fontFamily: "'Tiro Devanagari Hindi', serif",
-              color: 'rgba(255, 255, 255, 0.28)',
-              fontWeight: 500,
-            }}
-          >
-            प्र
-          </span>
-        </a>
-      </div>
-      <header className="fixed top-0 left-0 right-0 z-50 flex justify-end px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-2 sm:px-6 sm:pt-6 sm:pb-0">
-
-        <div className="relative flex items-start justify-end">
-          <input
-            type="checkbox"
-            id="nav-toggle"
-            className="peer sr-only"
-            checked={navOpen}
-            onChange={(event) => setNavOpen(event.target.checked)}
-          />
-
-          <label
-            htmlFor="nav-toggle"
-            id="nav-menu-label"
-            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-lg border border-white/10 bg-white/5 text-zinc-200 shadow-sm transition-all hover:border-white/15 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 md:hidden"
-            aria-controls="site-nav"
-            aria-label={navLabel}
-            aria-expanded={navOpen ? 'true' : 'false'}
-          >
-            <span className="sr-only">Menu</span>
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <path strokeLinecap="round" d="M4 7h16M4 12h16M4 17h16" />
-            </svg>
-          </label>
-
-          <label
-            htmlFor="nav-toggle"
-            className="fixed inset-0 z-40 bg-black/60 opacity-0 pointer-events-none backdrop-blur-sm transition-opacity duration-200 peer-checked:opacity-100 peer-checked:pointer-events-auto md:hidden"
-            aria-hidden="true"
-          ></label>
-
-          <nav
-            id="site-nav"
-            className="absolute right-0 top-full z-50 mt-2 hidden min-w-[12rem] flex-col gap-0.5 rounded-xl border border-white/10 bg-white/[0.08] p-2 shadow-2xl shadow-black/40 backdrop-blur-2xl peer-checked:flex md:static md:mt-0 md:flex md:min-w-0 md:flex-row md:gap-1 md:rounded-xl md:border md:border-white/10 md:bg-white/[0.06] md:p-2 md:shadow-lg md:shadow-black/30 md:backdrop-blur-xl lg:gap-2"
-            aria-label="Primary"
-          >
-            {['home', 'skills', 'timeline', 'contact'].map((section) => (
-              <a
-                key={section}
-                href={`#${section}`}
-                onClick={closeNav}
-                className="nav-link rounded-lg px-3 py-2.5 text-sm font-semibold text-zinc-200 transition-colors hover:bg-white/[0.08] hover:text-white md:py-1.5"
-              >
-                {section.charAt(0).toUpperCase() + section.slice(1)}
-              </a>
-            ))}
-          </nav>
-        </div>
-      </header>
 
       <section
         id="home"
@@ -508,10 +429,6 @@ export default function Home() {
           </ul>
         </div>
       </section>
-
-      <footer className="border-t border-white/10 bg-white/[0.02] px-5 py-7 text-center text-xs text-zinc-500 backdrop-blur-md sm:px-8 sm:py-8">
-        Built with ❤️ by Prakhar Aditya Tripathi
-      </footer>
     </main>
   );
 }

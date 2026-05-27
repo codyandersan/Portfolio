@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
-
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 const siteUrl = 'https://prakhartri.me';
 
 export const metadata: Metadata = {
@@ -172,7 +173,9 @@ export default function RootLayout({
       </head>
 
       <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-100 font-sans antialiased">
+        <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );
