@@ -14,23 +14,26 @@ export default function BlogFeed() {
     <div className="min-h-screen bg-black text-gray-300 p-8 pt-24">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-white mb-10">Blog</h1>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {posts.map((post) => (
-            <article key={post.slug} className="relative group flex flex-col border border-gray-800 hover:border-gray-700 bg-[#050505] transition-colors rounded-2xl overflow-hidden">
+            <article key={post.slug} className="relative group flex flex-col border border-gray-800 bg-[#050505] rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_-4px_rgba(56,189,248,0.1)] hover:border-gray-700">
               {post.coverImage ? (
-                <div className="relative w-full h-32 sm:h-40">
+                <div className="relative w-full aspect-video">
                   <Image src={post.coverImage} alt={post.title} fill className="w-full object-cover rounded-t-2xl" priority />
                 </div>
               ) : (
-                <div className="w-full h-32 sm:h-40 bg-[#0D1117] rounded-t-2xl flex-shrink-0" />
+                <div className="w-full aspect-video bg-[#0D1117] rounded-t-2xl flex-shrink-0" />
               )}
-              <div className="p-5 flex flex-col flex-grow">
-                <h2 className="text-2xl font-bold text-white mb-3">
+              
+              <div className="p-4 flex flex-col flex-grow">
+                <h2 className="text-xl font-bold text-white mb-2">
                   <Link href={`/blog/${post.slug}`} className="hover:text-sky-400 transition-colors before:absolute before:inset-0">
                     {post.title}
                   </Link>
                 </h2>
-                <div className="text-sm text-gray-400 mb-5">
+                
+                <div className="text-xs text-gray-400 mb-3">
                   <time dateTime={post.date}>
                     {new Date(post.date).toLocaleDateString('en-US', {
                       year: 'numeric',
@@ -39,10 +42,12 @@ export default function BlogFeed() {
                     })}
                   </time>
                 </div>
-                <p className="mb-6 leading-relaxed text-gray-300 line-clamp-2">{post.excerpt}</p>
+                
+                <p className="mb-4 text-sm leading-relaxed text-gray-300 line-clamp-2">{post.excerpt}</p>
+                
                 <div className="flex gap-2 flex-wrap mt-auto">
                   {post.tags?.map((tag) => (
-                    <span key={tag} className="relative z-10 text-xs bg-gray-900 border border-gray-800 text-sky-400 px-3 py-1.5 rounded-full font-medium">
+                    <span key={tag} className="relative z-10 text-[10px] sm:text-xs bg-gray-900 border border-gray-800 text-sky-400 px-2.5 py-1 rounded-full font-medium hover:bg-gray-800 hover:text-sky-300 transition-colors cursor-default">
                       {tag}
                     </span>
                   ))}
@@ -55,7 +60,7 @@ export default function BlogFeed() {
           )}
         </div>
         
-        <div className="mt-16 mb-8 flex items-center justify-center gap-3">
+        <div className="mt-16 flex items-center italic justify-center gap-3">
           <span className="text-gray-400 font-medium">More soon!</span>
         </div>
       </div>

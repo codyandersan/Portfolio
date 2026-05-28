@@ -1,0 +1,249 @@
+---
+title: "SSD Rejuvenation: Building a Swiss Army Drive"
+date: "2026-05-28"
+excerpt: "This is a sample blog post to test our MDX setup with next-mdx-remote and Tailwind Typography."
+tags: ["SSD", "Linux"]
+coverImage: "/blog-assets/ssd-rejuvenation/cover_image.webp"
+---
+
+When I went home for vacations, I found a neglected 256gb SSD pulled from a dead PC sitting around. So, I decided to resurrect it. I ordered an external enclosure and turned it into something I now actually use daily: a 2-in-1 portable drive that boots Linux on any machine, from a 15-year-old BIOS laptop to a modern workstation, and doubles as universal storage for my Android phone and smart TV at the same time.
+
+## Who is this for?
+
+- Distro hoppers constantly building and breaking systems
+- Tech nomads who need maximum portability and data security
+- Tinkerers looking for a hobby project
+
+> DISCLAIMER: This is how _I_ did it. It worked for me. It might not work for you. I am not responsible for any damage to your system or data. Proceed only if you know what you are doing.
+
+---
+
+## Final Result
+
+The drive flawlessly boots as a storage device on my phone and runs Linux when I boot it from my laptop.
+
+---
+
+## Choosing the best distro
+
+Out of the 600+ distros the community offers, the best for my use case was [MX Linux](https://mxlinux.org). I picked it for three reasons:
+
+- Lightweight enough to run comfortably from an old external SSD
+- Has Advanced Hardware Support (AHS) which includes modern drivers, so it works on newer hardware without manual patching
+- A Debian base provides long term compatibility and stability
+
+---
+
+## The Idea
+
+The idea is to build one portable SSD that serves two purposes. The majority of the drive is plain storage that any device can read, be it Android, iOS, a smart TV, another laptop, just anything! A smaller chunk of the drive runs a full Linux OS that boots on any laptop you plug it into, supporting both UEFI and Legacy BIOS.
+
+---
+
+## Ok, but why not just Ventoy it?
+
+I went for a full installation instead of live usb persistence mainly because:
+
+- I need multiple IDEs, tools and browser windows in my daily code workflow.
+- Managing persistence and preventing any kind of data loss is a big task in itself
+
+---
+
+## My Setup
+
+- 256gb SATA SSD in an external USB enclosure ([PiBOX India](https://www.pibox.in), not affiliated)
+- 2010 Toshiba laptop with legacy BIOS, used as the build machine
+- [MX Linux AHS x64](https://mxlinux.org/wiki/system/advanced-hardware-support) ISO on a USB drive
+
+---
+
+## The Dilemma of Partitions
+
+Open GParted and create these four partitions, each needing a different format for a specific reason.
+
+- `exFAT` — [220GB]  
+  For the storage vault. It is one of the few modern formats (other than good ol' FAT32) that Windows, macOS, Android, and smart TVs all read natively without installing anything extra. Others like NTFS have inconsistent support.
+
+- Legacy Key — [unformatted — 1 to 2MB — flag: `bios_grub`]  
+  Stays unformatted on purpose. It just holds raw boot code injected by GRUB. Formatting it would break that.
+
+- Modern Key — [`FAT32` — 300 to 512MB — flags: `esp`, `boot`]  
+  This is for the EFI partition. The UEFI spec requires FAT32 here. No alternative.
+
+- Brain — [`ext4` — 20 to 40GB (at least)]  
+  For the Linux root partition. It is the standard Linux filesystem for debian based distros which MX Linux expects to have.
+
+### Note
+
+Order matters here.
+
+The `exFAT` partition must be first since Android (depending on the manufacturers) scans from the front of the drive. If it hits a Linux partition or raw boot code before finding a readable filesystem, your phone would panic and prompt you to format the whole drive. Putting `exFAT` first means they mount it as storage and ignore everything behind it.
+
+The `bios_grub` partition handles old machines. A GPT formatted drive normally has no place for a legacy BIOS to inject boot code. This tiny 2MB unformatted space is that place. GRUB happily writes its legacy boot code here, and the old BIOS finds it via the Protective MBR at the start of the disk.
+
+The `FAT32` EFI partition is required by UEFI which is the default choice for modern laptops. Your machine looks for boot files in a FAT32 partition flagged as `ESP`.
+
+---
+
+## Pre-requisites
+
+- Basic knowledge of Linux filesystems, installation procedures and UEFI/BIOS
+- Download latest [MX Linux AHS x64](https://mxlinux.org/wiki/system/advanced-hardware-support) ISO and burn it on a thumb drive using Rufus or Ventoy (I prefer the latter)
+- Use a USB-A port where possible. Some USB-C and Thunderbolt ports have kernel DMA protection enabled which can interfere with booting from external drives.
+
+---
+
+## Installation
+
+Whether you have BIOS or UEFI, the partition layout is identical in both scenarios below. What changes is the order in which the two bootloaders get installed, depending on which machine you are building from.
+
+Replace `/dev/sdX` in all commands with your actual SSD identifier. Check GParted to confirm it, usually it's `sdb` or `sdc`. Do not mix it up with your internal drive. I once pointed it to the wrong drive and nuked my uncle's windows C: drive!
+
+### From a Modern UEFI Laptop (90% your case)
+
+**Step 1:** Boot the MX Linux installer from your USB.
+
+**Step 2:** Open GParted. Choose the SSD and carefully carve out the partition format we discussed earlier. Make sure all the flags are set properly.
+
+**Step 3:** Open the installer and choose custom partitioning. Assign the existing ext4 as root (`/`) and the existing FAT32 as `/boot/efi`. Make sure GRUB installation points to the portable SSD, not your internal drive!
+
+**Step 4:** Complete the installation as usual and unplug your installation pendrive.
+
+**Step 5:** Select your SSD in your machine's boot menu (`F12/ESC/F8` depending on your device) and boot into it. Open terminal and run:
+
+```bash
+sudo grub-install --target=i386-pc /dev/sdX
+```
+
+This installs the legacy BIOS bootloader so old machines can boot from it.
+
+**Step 6:** Now force the UEFI bootloader into the universal fallback path:
+
+```bash
+sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --removable
+```
+
+**Step 7:** Update GRUB:
+
+```bash
+sudo update-grub
+```
+
+### From a Legacy BIOS Laptop (my case, I have a [2010 Toshiba Satellite](https://www.cnet.com/products/toshiba-satellite-l650/))
+
+**Step 1:** Boot the MX Linux installer from your USB.
+
+**Step 2:** Open GParted. Choose the SSD and carefully carve out the partition format we discussed earlier. Make sure all the flags are set properly.
+
+**Step 3:** Open the installer and choose custom partitioning. Assign ext4 as root (`/`). Point GRUB to the portable SSD. The FAT32 partition does not get assigned here yet, that comes later.
+
+**Step 4:** Complete the installation. At this point the drive boots on legacy BIOS only. UEFI support does not exist yet.
+
+**Step 5:** Select your SSD in your machine's boot menu (`F12/ESC/F8` depending on your device) and boot into it. Open terminal and run:
+
+```bash
+sudo mkdir -p /boot/efi
+sudo mount /dev/sdX3 /boot/efi
+```
+
+_Replace `sdX3` with your actual EFI partition. Check GParted if not sure which one._
+
+**Step 6:** Install the UEFI bootloader manually:
+
+```bash
+sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --removable
+```
+
+**Step 7:** Update GRUB:
+
+```bash
+sudo update-grub
+```
+
+### Cool, but why `--removable`?
+
+Normally when you install a UEFI bootloader, GRUB writes an entry directly into your motherboard's NVRAM, essentially telling your machine where to find the boot files. That works fine for internal drives but breaks portability. In our case, when you plug the drive into a different laptop, that machine has no NVRAM entry for your drive and has no idea what to boot.
+
+Here our saviour, the `--removable` flag, skips NVRAM entirely. Instead it writes the bootloader to a standard fallback path: `/boot/efi/EFI/BOOT/BOOTX64.EFI`. Every UEFI machine checks this fallback path automatically. This is what makes the drive plug-and-boot on any modern laptop without configuration.
+
+### Verifying: the Moment of Truth
+
+- Plug into an old legacy BIOS machine (no idea why you still have one): should boot to GRUB then MX Linux
+- Plug into a modern UEFI laptop: same result
+- Plug into Android or a compatible iOS/iPadOS device: should mount as removable storage, without any format prompt
+- Plug into Windows PC or another Linux machine: exFAT vault should appear as a normal removable drive
+
+If Android prompts to format, the exFAT partition is either not first or did not create correctly. Go back into GParted and verify partition order.
+
+### Rule 101 of hopping: Leave No Trace
+
+If you used our reincarnated SSD to boot on someone else's machine, you may want to:
+
+- Re-enable Secure Boot in BIOS settings if you disabled it
+- Re-enable Fast Boot if you disabled it
+
+Windows sometimes has a fit without these two. The internal drive of your friend's machine should be completely untouched as long as you pointed GRUB at the portable SSD during installation.
+
+---
+
+## Errors I Faced (and why this took longer than you think)
+
+### GPT with no `bios_grub` partition
+
+I initially set up the drive with GPT but forgot to create the `bios_grub` partition. The Toshiba hit a blank screen on boot.
+
+**Fix:** Redo the partition table in GParted and include the 1-2mb unformatted `bios_grub` partition before reinstalling.
+
+### Blank screen on boot, `nomodeset`
+
+After GRUB loads, the screen goes blank and hangs. This is a graphics driver issue. On the GRUB menu, press `E` to edit the boot entry. Find the line starting with `linux` and add `nomodeset` to the end of it. Press `Ctrl+X` to boot. Once inside MX Linux you can make this permanent through the GRUB settings.
+
+### Stuck in loop: SCSI errors, `pcie_aspm=off`
+
+Boot hung with repeated errors referencing SCSI cache or PCIe. Edit the GRUB boot entry as above (press `E`) and add these to the `linux` line:
+
+```text
+pcie_aspm=off usbcore.autosuspend=-1
+```
+
+### Desktop not drawing, blank after login
+
+Logged in but got a blank desktop. Opened a TTY with `Ctrl+Alt+F3` and ran:
+
+```bash
+sudo rm /etc/X11/xorg.conf.d/*.conf
+```
+
+The system was loading display config files left over from a different machine (in my case the Toshiba's config was conflicting). Removing them let MX Linux detect the correct display setup fresh.
+
+### USB cable bottleneck
+
+Try changing cables if it doesn't boot, preferably a data cable over a charging one. On older machines like mine, USB ports cap at 2.0 speeds regardless.
+
+---
+
+## Benchmarks
+
+- Boot time (Toshiba, USB 2.0): ~55 sec
+- Boot time (modern laptop): ~18 sec
+- Idle RAM after boot: ~700MB
+
+Large file transfer:
+
+- USB 2.0 → ~28MB/s
+- USB 3.0 → ~180MB/s
+
+---
+
+## Limitations
+
+- Some OEMs might refuse to boot the drive or may use proprietary drivers not available for Linux. Specifically, ASUS Vivobook 15 uses the proprietary MediaTek MT7902 driver which caused WiFi issues on this setup.
+- Secure Boot may need disabling
+- Heavy writes may cause wear on the SSD
+- Read/Write speeds of even USB 3.0 aren't as fast as internal SATA or NVMe.
+
+---
+
+## Conclusion
+
+What started as a dead SSD became something I now carry almost everywhere. Be it as a portable workstation or as a data recovery tool. From this endeavour, I learnt that old hardware rarely becomes useless, most of the time it just needs a different purpose. The SSD still isn't super fast. The Toshiba is definitely not fast. But together they turned into something surprisingly useful. That was enough reason to keep both around.

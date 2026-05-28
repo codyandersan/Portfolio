@@ -25,7 +25,7 @@ export default function Navbar() {
       <div className="translate-y-1 absolute top-0 left-0 z-50 px-4 pt-[max(1rem,env(safe-area-inset-top))] sm:px-6 sm:pt-6 pointer-events-auto">
         <Link href="/#home" aria-label="Home">
           <span
-            className="logo-animate text-4xl leading-none transition-opacity duration-300 hover:opacity-70"
+            className="logo-animate text-4xl leading-none transition-opacity duration-[1500ms] hover:opacity-70"
             style={{
               fontFamily: "'Tiro Devanagari Hindi', serif",
               color: 'rgba(255, 255, 255, 0.28)',

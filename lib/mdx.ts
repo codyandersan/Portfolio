@@ -11,6 +11,7 @@ export interface BlogPostMeta {
   tags: string[];
   slug: string;
   coverImage?: string;
+  readingTime?: number;
 }
 
 export function getPostBySlug(slug: string) {
@@ -19,8 +20,11 @@ export function getPostBySlug(slug: string) {
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
   
+  const wordCount = content.split(/\s+/).length;
+  const readingTime = Math.ceil(wordCount / 200);
+  
   return {
-    meta: { ...data, slug } as BlogPostMeta,
+    meta: { ...data, slug, readingTime } as BlogPostMeta,
     content,
   };
 }
@@ -35,8 +39,10 @@ export function getAllPostsMeta(): BlogPostMeta[] {
       const slug = file.replace(/\.mdx$/, '');
       const fullPath = path.join(contentDir, file);
       const fileContents = fs.readFileSync(fullPath, 'utf8');
-      const { data } = matter(fileContents);
-      return { ...data, slug } as BlogPostMeta;
+      const { data, content } = matter(fileContents);
+      const wordCount = content.split(/\s+/).length;
+      const readingTime = Math.ceil(wordCount / 200);
+      return { ...data, slug, readingTime } as BlogPostMeta;
     });
 
   // Filter out posts with future dates

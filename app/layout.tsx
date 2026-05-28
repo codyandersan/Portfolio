@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import NextTopLoader from 'nextjs-toploader';
 const siteUrl = 'https://prakhartri.me';
 
 export const metadata: Metadata = {
@@ -173,6 +174,7 @@ export default function RootLayout({
       </head>
 
       <body className="min-h-full flex flex-col bg-zinc-950 text-zinc-100 font-sans antialiased">
+        <NextTopLoader color="#38bdf8" showSpinner={false} height={2} shadow="0 0 10px #38bdf8,0 0 5px #38bdf8" />
         <Navbar />
         {children}
         <Footer />
