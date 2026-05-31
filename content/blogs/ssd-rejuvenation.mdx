@@ -1,8 +1,8 @@
 ---
 title: "SSD Rejuvenation: Building a Swiss Army Drive"
 date: "2026-05-28"
-excerpt: "This is a sample blog post to test our MDX setup with next-mdx-remote and Tailwind Typography."
-tags: ["SSD", "Linux"]
+excerpt: "How I converted a neglected SSD into a Linux workstation that I use wherever I go."
+tags: ["SSD", "Linux", "Tutorial"]
 coverImage: "/blog-assets/ssd-rejuvenation/cover_image.webp"
 ---
 
@@ -14,19 +14,33 @@ When I went home for vacations, I found a neglected 256gb SSD pulled from a dead
 - Tech nomads who need maximum portability and data security
 - Tinkerers looking for a hobby project
 
-> DISCLAIMER: This is how _I_ did it. It worked for me. It might not work for you. I am not responsible for any damage to your system or data. Proceed only if you know what you are doing.
+> DISCLAIMER: This is how I did it. It worked for me. It might not work for you. I am not responsible for any damage to your system or data. Proceed only if you know what you are doing.
 
 ---
 
 ## Final Result
+<div className="relative mx-auto w-full max-w-xl aspect-video rounded-xl overflow-hidden border border-gray-800/80 shadow-lg my-8">
+  <video 
+    autoPlay 
+    loop 
+    muted 
+    playsInline 
+    className="w-full h-full object-cover"
+  >
+    <source src="https://res.cloudinary.com/ditxpszwu/video/upload/f_auto,q_auto/v1780230810/boot_video_hlzylf.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+</div>
 
-The drive flawlessly boots as a storage device on my phone and runs Linux when I boot it from my laptop.
+![iPad Files app showing the exFAT Vault mounted successfully](/blog-assets/ssd-rejuvenation/ipad.jpeg)
+
+The drive flawlessly boots as a storage device on my iPad and runs Linux when I boot it from my laptop.
 
 ---
 
 ## Choosing the best distro
 
-Out of the 600+ distros the community offers, the best for my use case was [MX Linux](https://mxlinux.org). I picked it for three reasons:
+Out of the 600+ distros the community offers, the best for my use case was [MX Linux](https://mxlinux.org/download-links/). I picked it for three reasons:
 
 - Lightweight enough to run comfortably from an old external SSD
 - Has Advanced Hardware Support (AHS) which includes modern drivers, so it works on newer hardware without manual patching
@@ -51,13 +65,15 @@ I went for a full installation instead of live usb persistence mainly because:
 
 ## My Setup
 
-- 256gb SATA SSD in an external USB enclosure ([PiBOX India](https://www.pibox.in), not affiliated)
+- 256gb SATA SSD in an external [USB enclosure](https://pibox.in/product/2-5-inch-hard-drive-enclosure-pibox-india-6gbps-usb-3-1-to-sata-iii-tool-free-external-hard-drive-enclosure-for-7mm-9-5mm-2-5-ssd-laptop-hdd-with-uasp-for-toshiba-samsung-wd-xbox-pc-tv-black/) (not affiliated)
 - 2010 Toshiba laptop with legacy BIOS, used as the build machine
 - [MX Linux AHS x64](https://mxlinux.org/wiki/system/advanced-hardware-support) ISO on a USB drive
 
 ---
 
 ## The Dilemma of Partitions
+
+![GParted layout showing 4 partitions](/blog-assets/ssd-rejuvenation/gparted_screenshot.png)
 
 Open GParted and create these four partitions, each needing a different format for a specific reason.
 
@@ -88,7 +104,7 @@ The `FAT32` EFI partition is required by UEFI which is the default choice for mo
 ## Pre-requisites
 
 - Basic knowledge of Linux filesystems, installation procedures and UEFI/BIOS
-- Download latest [MX Linux AHS x64](https://mxlinux.org/wiki/system/advanced-hardware-support) ISO and burn it on a thumb drive using Rufus or Ventoy (I prefer the latter)
+- Download latest [MX Linux AHS x64](https://sourceforge.net/projects/mx-linux/files/Final/Xfce/MX-25.2_Xfce_ahs_x64.iso/download) ISO and burn it on a thumb drive using Rufus or Ventoy (I prefer the latter)
 - Use a USB-A port where possible. Some USB-C and Thunderbolt ports have kernel DMA protection enabled which can interfere with booting from external drives.
 
 ---
@@ -129,7 +145,7 @@ sudo grub-install --target=x86_64-efi --efi-directory=/boot/efi --removable
 sudo update-grub
 ```
 
-### From a Legacy BIOS Laptop (my case, I have a [2010 Toshiba Satellite](https://www.cnet.com/products/toshiba-satellite-l650/))
+### From a Legacy BIOS Laptop (my case, I have a [2010 Toshiba Satellite](https://www.cnet.com/reviews/toshiba-satellite-c660-review/))
 
 **Step 1:** Boot the MX Linux installer from your USB.
 
@@ -167,6 +183,9 @@ Normally when you install a UEFI bootloader, GRUB writes an entry directly into 
 Here our saviour, the `--removable` flag, skips NVRAM entirely. Instead it writes the bootloader to a standard fallback path: `/boot/efi/EFI/BOOT/BOOTX64.EFI`. Every UEFI machine checks this fallback path automatically. This is what makes the drive plug-and-boot on any modern laptop without configuration.
 
 ### Verifying: the Moment of Truth
+![MX Linux XFCE Desktop Environment](/blog-assets/ssd-rejuvenation/homescreen_screenshot.png)
+![Fastfetch terminal output showing system specifications](/blog-assets/ssd-rejuvenation/fastfetch_screenshot.png)
+
 
 - Plug into an old legacy BIOS machine (no idea why you still have one): should boot to GRUB then MX Linux
 - Plug into a modern UEFI laptop: same result
@@ -224,14 +243,14 @@ Try changing cables if it doesn't boot, preferably a data cable over a charging 
 
 ## Benchmarks
 
-- Boot time (Toshiba, USB 2.0): ~55 sec
-- Boot time (modern laptop): ~18 sec
+- Boot time (Toshiba, USB 2.0): ~45 sec
+- Boot time (modern laptop): ~20 sec
 - Idle RAM after boot: ~700MB
 
 Large file transfer:
 
-- USB 2.0 → ~28MB/s
-- USB 3.0 → ~180MB/s
+- USB 2.0: ~28MB/s
+- USB 3.0: ~180MB/s
 
 ---
 

@@ -1,10 +1,26 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { getAllPostsMeta } from '@/lib/mdx';
+import { Metadata } from 'next';
 
-export const metadata = {
-  title: 'Blog',
-  description: 'Read the latest blog posts.',
+export const metadata: Metadata = {
+  title: 'Blog | Prakhar Aditya Tripathi',
+  description: 'Collection of tech write-ups and random things I learn along the way.',
+  openGraph: {
+    title: 'Blog | Prakhar Aditya Tripathi',
+    description: 'Collection of tech write-ups and random things I learn along the way.',
+    url: '/blog',
+    siteName: 'Prakhar Aditya Tripathi',
+    images: [
+      {
+        url: '/og.png',
+        width: 1200,
+        height: 630,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
 };
 
 export default function BlogFeed() {
@@ -13,8 +29,11 @@ export default function BlogFeed() {
   return (
     <div className="min-h-screen bg-black text-gray-300 p-8 pt-24">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-10">Blog</h1>
-        
+        <div className="mb-10">
+          <h1 className="text-4xl font-bold text-white mb-2">Blog</h1>
+          <p className="text-gray-400 text-base sm:text-lg mb-6">Collection of tech write-ups and random things I learn along the way.</p>
+          <hr className="border-gray-800/60" />
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {posts.map((post) => (
             <article key={post.slug} className="relative group flex flex-col border border-gray-800 bg-[#050505] rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_-4px_rgba(56,189,248,0.1)] hover:border-gray-700">

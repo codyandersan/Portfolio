@@ -1,9 +1,11 @@
 import { getPostBySlug, getAllPostsMeta } from '@/lib/mdx';
+import { Metadata } from 'next';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import rehypePrettyCode from 'rehype-pretty-code';
 import Image from 'next/image';
 import Link from 'next/link';
 import Pre from '@/components/mdx/Pre';
+import BackToTop from '@/components/BackToTop';
 
 export async function generateStaticParams() {
   const posts = getAllPostsMeta();
@@ -12,26 +14,34 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const resolvedParams = await params;
   const { meta } = getPostBySlug(resolvedParams.slug);
 
-  const ogImages = meta.coverImage ? [meta.coverImage] : [];
+  if (!meta) return {};
 
   return { 
-    title: meta.title, 
+    title: `${meta.title} | Prakhar Aditya Tripathi`, 
     description: meta.excerpt,
     openGraph: {
       title: meta.title,
       description: meta.excerpt,
       type: 'article',
-      images: ogImages,
+      url: `/blog/${resolvedParams.slug}`,
+      images: [
+        {
+          url: meta.coverImage || '/og.png',
+          width: 1200,
+          height: 630,
+          alt: meta.title,
+        }
+      ]
     },
     twitter: {
       card: 'summary_large_image',
       title: meta.title,
       description: meta.excerpt,
-      images: ogImages,
+      images: meta.coverImage ? [meta.coverImage] : ['/og.png'],
     }
   };
 }
@@ -120,9 +130,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </article>
       </div>
       
-      <a href="#top" className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 p-2 sm:p-3 scale-90 sm:scale-100 z-40 bg-gray-900/80 backdrop-blur border border-gray-800 text-sky-400 rounded-full shadow-lg hover:bg-gray-800 transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
-      </a>
+      <BackToTop />
     </div>
   );
 }

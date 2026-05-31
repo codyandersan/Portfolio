@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 const fullName = 'Prakhar Aditya Tripathi';
@@ -100,6 +101,16 @@ export default function Home() {
             <p className="mt-4 text-base sm:text-lg text-zinc-300 font-light leading-relaxed text-center md:text-left">
               I build tools that simplify things.
             </p>
+
+            <Link 
+              href="/blog" 
+              className="group inline-flex items-center gap-2 mt-6 mb-2 text-sm font-medium text-gray-300 hover:text-white transition-all w-fit mx-auto sm:mx-0"
+            >
+              <span className="underline decoration-gray-700 underline-offset-4 group-hover:decoration-sky-400 transition-colors">Check out blogs.</span>
+              <span className="text-sky-500 group-hover:text-sky-400 group-hover:translate-x-1 transition-transform duration-300">
+                →
+              </span>
+            </Link>
 
             <div className="mt-6 flex flex-wrap gap-3 md:gap-2.5 items-center justify-center md:justify-start">
               <a
@@ -317,13 +328,13 @@ export default function Home() {
                           href={item.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="group inline-flex items-center gap-1.5 text-white transition-colors hover:text-blue-200"
+                          className="group inline-flex items-center gap-1 sm:gap-1.5 text-blue-200 transition-colors hover:text-blue-300"
                         >
-                          <span className="underline decoration-wavy decoration-transparent underline-offset-[5px] transition-all duration-300 group-hover:decoration-blue-400">
+                          <span className="underline decoration-wavy decoration-blue-400/50 sm:decoration-transparent underline-offset-[5px] transition-all duration-300 group-hover:decoration-blue-400">
                             {item.title}
                           </span>
                           <svg
-                            className="h-4 w-4 text-blue-400 opacity-0 -translate-x-2 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+                            className="h-4 w-4 shrink-0 text-blue-400 opacity-100 transition-all duration-300 sm:-translate-x-2 sm:opacity-0 sm:group-hover:translate-x-0 sm:group-hover:opacity-100"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"

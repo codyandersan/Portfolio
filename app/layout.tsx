@@ -6,7 +6,7 @@ import NextTopLoader from 'nextjs-toploader';
 const siteUrl = 'https://prakhartri.me';
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL('https://prakhartri.me'),
 
   title: {
     default: 'Prakhar Aditya Tripathi',
