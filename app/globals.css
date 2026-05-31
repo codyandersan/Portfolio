@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   --background: #000000;
@@ -16,7 +17,7 @@
 }
 
 .logo-animate {
-  animation: fadeSlideIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
+  animation: fadeSlideIn 2.5s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
 }
 @theme inline {
   --color-background: var(--background);
@@ -32,6 +33,7 @@
 
 html {
   min-height: 100%;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -43,4 +45,25 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+/* Target ONLY inline code (code tags not wrapped in a pre tag) */
+.prose :not(pre) > code {
+  @apply px-1.5 py-0.5 bg-gray-800/80 text-sky-300 font-mono text-[0.875em] rounded-md border border-gray-700/50;
+  display: inline;
+  word-break: break-word;
+}
+
+/* Remove Tailwind's default pseudo-element backticks */
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none !important;
+}
+
+/* Override default prose image sizing to prevent massive desktop images */
+.prose img {
+  @apply mx-auto my-8 rounded-xl border border-gray-800/80 shadow-lg;
+  max-height: 450px;
+  width: auto;
+  max-width: 100%;
 }
