@@ -98,6 +98,9 @@ export const metadata: Metadata = {
   },
 
   category: 'technology',
+  verification: {
+    google: 'm3g4bHsaIcZR_28YiJVCOAxeGwUzT4dHXP04v5m609c',
+  },
 };
 
 export default function RootLayout({
@@ -106,11 +109,6 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full scroll-smooth antialiased">
       <head>
-        <meta
-          name="google-site-verification"
-          content="m3g4bHsaIcZR_28YiJVCOAxeGwUzT4dHXP04v5m609c"
-        />
-
         <meta
           name="theme-color"
           content="#09090b"
